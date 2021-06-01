@@ -1,23 +1,19 @@
-const getRndInteger = function (min, max) {
-  const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-
+const getRandomInteger = (min, max) => {
   if (min < 0 || min >= max || max < 0) {
-    return ('Введены некорректные параметры');
+    throw new RangeError('Введены некорректные параметры');
   }
 
-  return randomNumber;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-getRndInteger(1, 10);
+getRandomInteger(1, 10);
 
-const getRndNumber = function (min, max, decimal) {
-  const randomNumber = + (Math.random() * (max - min) + min).toFixed(decimal);
-
+const getRandomFloatNumber = (min, max, decimal = 2) => {
   if (min < 0 || min >= max || max < 0) {
-    return ('Введены некорректные параметры');
+    throw new RangeError('Введены некорректные параметры');
   }
 
-  return randomNumber;
+  return + (Math.random() * (max - min) + min).toFixed(decimal);
 };
 
-getRndNumber(1, 10, 2);
+getRandomFloatNumber(1, 10);
