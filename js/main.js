@@ -1,22 +1,15 @@
-const getRandomInteger = (min, max) => {
-  if (min < 0 || min >= max || max < 0) {
-    throw new RangeError('Введены некорректные параметры');
-  }
-
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
-getRandomInteger(1, 10);
-
-const getRandomFloatNumber = (min, max, decimal = 2) => {
-  if (min < 0 || min >= max || max < 0) {
-    throw new RangeError('Введены некорректные параметры');
-  }
-
-  return + (Math.random() * (max - min) + min).toFixed(decimal);
-};
-
-getRandomFloatNumber(1, 10);
+const MIN_PRICE = 2000;
+const MAX_PRICE = 10000;
+const MIN_ROOMS = 1;
+const MAX_ROOMS = 5;
+const MIN_GUESTS = 1;
+const MAX_GUESTS = 100;
+const MIN_LAT = 35.65;
+const MAX_LAT = 35.70;
+const MIN_LONG = 139.70;
+const MAX_LONG = 139.80;
+const FRACTION_DIGITS = 5;
+const SIMILAR_ADVERTS_COUNT = 10;
 
 const TITLES = [
   'Заголовок_1',
@@ -73,31 +66,50 @@ const PHOTOS = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg',
 ];
 
+const getRandomInteger = (min, max) => {
+  if (min < 0 || min >= max || max < 0) {
+    throw new RangeError('Введены некорректные параметры');
+  }
+
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+const getRandomFloatNumber = (min, max, decimal = 2) => {
+  if (min < 0 || min >= max || max < 0) {
+    throw new RangeError('Введены некорректные параметры');
+  }
+
+  return + (Math.random() * (max - min) + min).toFixed(decimal);
+};
+
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0,elements.length - 1)];
 
 const getRandomArrayLength = (elements) => {
   const arrayLength = getRandomInteger(1, elements.length);
   const array = [];
+
   for (let index = 0; index <= arrayLength; index++) {
     array.push(elements[index]);
   }
+
   return array;
 };
 
-const createAdvert = () => {
-  const latitude = getRandomFloatNumber(35.65, 35.70, 5);
-  const longitude = getRandomFloatNumber(139.70, 139.80, 5);
+const createAdvert = (index) => {
+  const latitude = getRandomFloatNumber(MIN_LAT, MAX_LAT, FRACTION_DIGITS);
+  const longitude = getRandomFloatNumber(MIN_LONG, MAX_LONG, FRACTION_DIGITS);
+
   return {
     author: {
-      avatar: `img/avatars/user0${getRandomInteger(1, 10)}.png`,
+      avatar: `img/avatars/user0${index}.png`,
     },
     offer: {
       title: getRandomArrayElement(TITLES),
       address: `${latitude}, ${longitude}`,
-      price: getRandomInteger(2000, 10000),
+      price: getRandomInteger(MIN_PRICE, MAX_PRICE),
       type: getRandomArrayElement(TYPES),
-      rooms: getRandomInteger(1, 5),
-      guests: getRandomInteger(1, 5),
+      rooms: getRandomInteger(MIN_ROOMS, MAX_ROOMS),
+      guests: getRandomInteger(MIN_GUESTS, MAX_GUESTS),
       checkin: getRandomArrayElement(TIMES),
       checkout: getRandomArrayElement(TIMES),
       features: getRandomArrayLength(FEATURES),
@@ -111,6 +123,5 @@ const createAdvert = () => {
   };
 };
 
-const similarAdvert = new Array(10).fill(null).map(() => createAdvert());
-
-similarAdvert;
+// eslint-disable-next-line no-unused-vars
+const similarAdverts = new Array(SIMILAR_ADVERTS_COUNT).fill(null).map((_, index) => createAdvert(index));
