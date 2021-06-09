@@ -27,4 +27,4 @@ const getRandomArrayLength = (elements) => {
   return array;
 };
 
-export{getRandomInteger, getRandomFloatNumber, getRandomArrayElement, getRandomArrayLength};
+export {getRandomInteger, getRandomFloatNumber, getRandomArrayElement, getRandomArrayLength};

@@ -1,4 +1,4 @@
-import{getRandomInteger, getRandomFloatNumber, getRandomArrayElement, getRandomArrayLength} from './utils.js';
+import {getRandomInteger, getRandomFloatNumber, getRandomArrayElement, getRandomArrayLength} from './utils.js';
 
 const MIN_PRICE = 2000;
 const MAX_PRICE = 10000;
@@ -99,4 +99,4 @@ const createAdvert = (index) => {
 // eslint-disable-next-line no-unused-vars
 const similarAdverts = new Array(SIMILAR_ADVERTS_COUNT).fill(null).map((_, index) => createAdvert(index));
 
-export{similarAdverts};
+export {similarAdverts};
