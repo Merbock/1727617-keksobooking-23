@@ -1,7 +1,4 @@
-import {similarAdverts} from './data.js';
-
-const template = document.querySelector('#card').content.querySelector('.popup'); //находим шаблон и его содержимое
-const mapCanvas = document.querySelector('#map-canvas'); // находим блок с картой
+const template = document.querySelector('#card').content.querySelector('.popup');
 
 const housingType = {
   flat: 'Квартира',
@@ -11,11 +8,48 @@ const housingType = {
   hotel: 'Отель',
 };
 
-const cardFragment = document.createDocumentFragment(); // создаем фрагмент
+const getDeclension = (number, txt, cases = [2, 0, 1, 1, 1, 2]) => txt[(number % 100 > 4 && number % 100 < 20) ? 2 : cases[(number % 10 < 5) ? number % 10 : 5]];
+
+const fillFeatures = (cardPopup, features) => {
+  const featureList = cardPopup.querySelector('.popup__features');
+
+  featureList.innerHTML = '';
+
+  features.forEach((feature) => {
+    const newFeature = document.createElement('li');
+    newFeature.classList.add('popup__feature', `popup__feature--${feature}`);
+    featureList.appendChild(newFeature);
+  });
+};
+
+const fillPhoto = (cardPopup, photos) => {
+  const photoList = cardPopup.querySelector('.popup__photos');
+
+  photoList.innerHTML = '';
+
+  photos.forEach((src) => {
+    photoList.insertAdjacentHTML(
+      'beforeend',
+      `<img src=${src} class="popup__photo" width="45" height="40" alt="Фотография жилья">`);
+  });
+};
 
 const createCard = ({author, offer}) => {
-  const cardPopup = template.cloneNode(true); // клонируем элемент со всем содержимым
-  // Находим нужные элементы в шаблоне
+  const {
+    title,
+    address,
+    price,
+    type,
+    description,
+    rooms,
+    guests,
+    checkin,
+    checkout,
+    features,
+    photos,
+  } = offer;
+
+  const cardPopup = template.cloneNode(true);
   const popupAvatar = cardPopup.querySelector('.popup__avatar');
   const popupTitle = cardPopup.querySelector('.popup__title');
   const popupAddress = cardPopup.querySelector('.popup__text--address');
@@ -26,60 +60,17 @@ const createCard = ({author, offer}) => {
   const popupTime = cardPopup.querySelector('.popup__text--time');
 
   popupAvatar.src = (!author.avatar) ? popupAvatar.remove() : author.avatar;
-  popupTitle.textContent = (!offer.title) ? popupTitle.remove() : offer.title;
-  popupAddress.textContent = (!offer.address) ? popupAddress.remove() : offer.address;
-  popupPrice.textContent = (!offer.price) ? popupPrice.remove() : `${offer.price} ₽/ночь`;
-  popupType.textContent = (!offer.type) ? popupType.remove() : housingType[offer.type];
-  popupDescription.textContent = (!offer.description) ? popupDescription.remove() : offer.description;
-  // Создаем генератор соответствия комнат
-  const getDeclensionRooms = function (rooms) {
-    if (rooms > 4) {
-      return 'комнат';
-    } else if (rooms > 1) {
-      return 'комнаты';
-    } else {
-      return 'комната';
-    }
-  };
-  // Создаем генератор соответствия гостей
-  const getDeclensionGuests = function (guests) {
-    return guests === 1 ? 'гостя' : 'гостей';
-  };
+  popupTitle.textContent = (!title) ? popupTitle.remove() : title;
+  popupAddress.textContent = (!address) ? popupAddress.remove() : address;
+  popupPrice.textContent = (!price) ? popupPrice.remove() : `${price} ₽/ночь`;
+  popupType.textContent = (!type) ? popupType.remove() : housingType[type];
+  popupDescription.textContent = (!description) ? popupDescription.remove() : description;
+  popupCapacity.textContent = (!rooms || !guests) ? popupCapacity.remove() : `${rooms} ${getDeclension(`${rooms}`, ['комната', 'комнаты', 'комнат'])} для ${guests} ${getDeclension(`${guests}`, ['гостя', 'гостей', 'гостей'])}`;
+  popupTime.textContent = (!checkin || !checkout) ? popupTime.remove() : `Заезд после ${checkin}, выезд после ${checkout}`;
+  fillFeatures(cardPopup, features);
+  fillPhoto(cardPopup, photos);
 
-  popupCapacity.textContent = (!offer.rooms || !offer.guests) ? popupCapacity.remove() : `${offer.rooms} ${getDeclensionRooms(offer.rooms)} для ${offer.guests} ${getDeclensionGuests(offer.guests)}`;
-  popupTime.textContent = (!offer.checkin || !offer.checkout) ? popupTime.remove() : `Заезд после ${offer.checkin}, выезд после ${offer.checkout}`;
-
-  const featureElements = cardPopup.querySelector('.popup__features'); // Находим список фич
-  // Добавляем проверку на наличие объекта с фичами
-  if (!offer.features) {
-    featureElements.remove(); // Удаляем список с фичами
-  } else {
-    const featureElement = cardPopup.querySelectorAll('.popup__feature'); // Находим элементы списка с фичами
-    const modifiers = (offer.features).map((feature) => `popup__feature--${feature}`); // Итерируемся по массиву фич и возвращаем класс с модификатором
-    featureElement.forEach((item) => {
-      const modifire = item.classList[1]; // Проверяем наличие второго класса(модификатора) у элемента фич
-      if (!modifiers.includes(modifire)) {
-        item.remove(); // Если у элемента нет второго класса(модификатора), то удаляем элемент
-      }
-    });
-  }
-
-  const photoList = cardPopup.querySelector('.popup__photos'); // Находим блок с фото
-  if (!offer.photos) {
-    photoList.remove(); // Проверяем наличие в массиве объекта с фото, если нет, то удаляем блок
-  } else {
-    photoList.querySelector('.popup__photo').remove(); // Если объект с фото есть, то очищаем блок с фото
-  }
-  // Проходимся по массиву фото и добавляем элементы в конец блока в виде шаблонной строки
-  offer.photos.forEach((address) => {
-    photoList.insertAdjacentHTML('beforeend', `<img src = "${address}" class = "popup__photo" width = "45" heigth = "40" alt = "Фотография жилья">`);
-  });
-
-  cardFragment.appendChild(cardPopup); // Добавляем в фрагмент шаблон с данными
-
-  mapCanvas.appendChild(cardFragment); // Отрисовываем фрагмент с данными в mapCanvas
+  return cardPopup;
 };
-
-createCard(similarAdverts[4]);
 
 export {createCard};

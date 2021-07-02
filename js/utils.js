@@ -17,7 +17,7 @@ const getRandomFloatNumber = (min, max, decimal = 2) => {
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0,elements.length - 1)];
 
 const getRandomArrayLength = (elements) => {
-  const arrayLength = getRandomInteger(1, elements.length);
+  const arrayLength = getRandomInteger(1, elements.length - 1);
   const array = [];
 
   for (let index = 0; index <= arrayLength; index++) {
