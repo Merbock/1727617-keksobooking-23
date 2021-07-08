@@ -1,3 +1,5 @@
+import {resetMap} from './map.js';
+
 const adForm = document.querySelector('.ad-form');
 const formTitle = adForm.querySelector('#title');
 const formPrice = adForm.querySelector('#price');
@@ -6,6 +8,8 @@ const formCapacity = adForm.querySelector('#capacity');
 const propertyTypes = adForm.querySelector('#type');
 const checkInTime = adForm.querySelector('#timein');
 const checkOutTime = adForm.querySelector('#timeout');
+const formAddress = adForm.querySelector('#address');
+const formReset = adForm.querySelector('.ad-form__reset');
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
 const MAX_PRICE_VALUE = 1000000;
@@ -18,6 +22,8 @@ const PROPERTY_PRICE = {
   house: 5000,
   palace: 10000,
 };
+
+formAddress.readOnly = true;
 
 const onTitleChange = () => {
   const formTitleLength = formTitle.value.length;
@@ -67,16 +73,15 @@ const onPropertyChange = () => {
   propertyTypes.reportValidity();
 };
 
-const onCheckInTime = () => {
-  checkOutTime.value = checkInTime.value;
-
-  checkInTime.reportValidity();
+const onCheckInCheckOutTime = (evt) => {
+  checkOutTime.value = evt.target.value;
+  checkInTime.value = evt.target.value;
 };
 
-const onCheckOutTime = () => {
-  checkInTime.value = checkOutTime.value;
-
-  checkOutTime.reportValidity();
+const onFormReset = (evt) => {
+  evt.preventDefault();
+  adForm.reset();
+  resetMap();
 };
 
 const setFormListeners = () => {
@@ -84,8 +89,9 @@ const setFormListeners = () => {
   formPrice.addEventListener('change', onPriceChange);
   formCapacity.addEventListener('change', onCapacityChange);
   propertyTypes.addEventListener('change', onPropertyChange);
-  checkInTime.addEventListener('change', onCheckInTime);
-  checkOutTime.addEventListener('change', onCheckOutTime);
+  checkInTime.addEventListener('change', onCheckInCheckOutTime);
+  checkOutTime.addEventListener('change', onCheckInCheckOutTime);
+  formReset.addEventListener('click', onFormReset);
 };
 
 export {setFormListeners};

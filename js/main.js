@@ -1,19 +1,7 @@
 import {similarAdverts} from './data.js';
-import {createCard} from './card.js';
-import {disablePage, enablePage} from './page-state.js';
 import {setFormListeners} from './form.js';
+import {createAdMarker} from './map.js';
 
-const mapCanvas = document.querySelector('#map-canvas');
+similarAdverts.forEach((dataAd) => createAdMarker(dataAd));
 
-const card = createCard(similarAdverts[4]);
-
-mapCanvas.append(card);
-
-//тест
-window.addEventListener('DOMContentLoaded', () => {
-  disablePage();
-  document.addEventListener('click', () => {
-    enablePage();
-    setFormListeners();
-  });
-});
+setFormListeners();
