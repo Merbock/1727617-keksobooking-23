@@ -1,7 +1,7 @@
 import {similarAdverts} from './data.js';
 import {setFormListeners} from './form.js';
-import {createAdMarker} from './map.js';
+import {renderMarkers} from './map.js';
 
-similarAdverts.forEach((dataAd) => createAdMarker(dataAd));
+renderMarkers(similarAdverts);
 
 setFormListeners();

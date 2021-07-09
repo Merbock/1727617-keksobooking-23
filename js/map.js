@@ -1,42 +1,59 @@
-import { createCard } from './card.js';
-import { enablePage } from './page-state.js';
-
-const DEFAULT_COORDS = {
-  lat: 35.67500,
-  lng: 139.75000,
-};
-const FRACTION_DIGITS = 5;
+import {createCard} from './card.js';
+import {enablePage} from './page-state.js';
+import {setAddress} from './form.js';
 
 const addressInput = document.querySelector('#address');
+const FRACTION_DIGITS = 5;
+const MAP_ZOOM = 12;
+
+const DefaultCoords = {
+  LAT: 35.67500,
+  LNG: 139.75000,
+};
+
+const Tile = {
+  URL: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  ATTRUBUTION: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+};
+
+const Marker = {
+  MAIN_ICON_HEIGHT: 52,
+  MAIN_ICON_WIDTH: 52,
+  MAIN_ANCHOR_Y: 52,
+  AD_ICON_HEIGHT: 40,
+  AD_ICON_WIDTH: 40,
+  AD_ANCHOR_Y: 40,
+};
 
 const map = L.map('map-canvas')
   .on('load', () => {
     enablePage();
+    addressInput.value = `${DefaultCoords.LAT.toFixed(FRACTION_DIGITS)}, ${DefaultCoords.LNG.toFixed(FRACTION_DIGITS)}`;
   })
   .setView({
-    lat: DEFAULT_COORDS.lat,
-    lng: DEFAULT_COORDS.lng,
-  }, 12);
+    lat: DefaultCoords.LAT,
+    lng: DefaultCoords.LNG,
+  }, MAP_ZOOM);
 
 L.tileLayer(
-  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  Tile.URL,
   {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    attribtuion: Tile.ATTRUBUTION,
   },
 ).addTo(map);
 
 const mainIcon = L.icon(
   {
     iconUrl: 'img/main-pin.svg',
-    iconSize: [52, 52],
-    iconAnchor: [26, 52],
+    iconSize: [Marker.MAIN_ICON_WIDTH, Marker.MAIN_ICON_HEIGHT],
+    iconAnchor: [Marker.MAIN_ICON_WIDTH / 2, Marker.MAIN_ANCHOR_Y],
   },
 );
 
 const mainMarker = L.marker(
   {
-    lat: DEFAULT_COORDS.lat,
-    lng: DEFAULT_COORDS.lng,
+    lat: DefaultCoords.LAT,
+    lng: DefaultCoords.LNG,
   },
   {
     draggable: true,
@@ -46,35 +63,32 @@ const mainMarker = L.marker(
 
 mainMarker.addTo(map);
 
-addressInput.value = `${mainMarker._latlng.lat.toFixed(FRACTION_DIGITS)}, ${mainMarker._latlng.lng.toFixed(FRACTION_DIGITS)}`;
-
 mainMarker.on('move', (evt) => {
-  addressInput.value = `${evt.target.getLatLng().lat.toFixed(FRACTION_DIGITS)}, ${evt.target.getLatLng().lng.toFixed(FRACTION_DIGITS)}`;
+  setAddress(evt.target.getLatLng());
 });
 
 const resetMap = () => {
   map.setView(
     {
-      lat: DEFAULT_COORDS.lat,
-      lng: DEFAULT_COORDS.lng,
-    }, 12);
+      lat: DefaultCoords.LAT,
+      lng: DefaultCoords.LNG,
+    });
   mainMarker.setLatLng({
-    lat: DEFAULT_COORDS.lat,
-    lng: DEFAULT_COORDS.lng,
+    lat: DefaultCoords.LAT,
+    lng: DefaultCoords.LNG,
   });
-  addressInput.value = `${mainMarker._latlng.lat.toFixed(FRACTION_DIGITS)}, ${mainMarker._latlng.lng.toFixed(FRACTION_DIGITS)}`;
 };
 
 const markerGroup = L.layerGroup().addTo(map);
 
 const createAdMarker = (dataAd) => {
 
-  const { location } = dataAd;
+  const {location} = dataAd;
 
   const iconAd = L.icon({
     iconUrl: 'img/pin.svg',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
+    iconSize: [Marker.AD_ICON_WIDTH, Marker.AD_ICON_HEIGHT],
+    iconAnchor: [Marker.AD_ICON_WIDTH / 2, Marker.AD_ANCHOR_Y],
   });
 
   const markerAd = L.marker(
@@ -93,4 +107,10 @@ const createAdMarker = (dataAd) => {
   markerAd.addTo(markerGroup).bindPopup(createCard(dataAd));
 };
 
-export {createAdMarker, resetMap};
+const renderMarkers = (similarAds) => {
+  similarAds.forEach((dataAd) => {
+    createAdMarker(dataAd);
+  });
+};
+
+export {renderMarkers, resetMap};

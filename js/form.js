@@ -1,6 +1,7 @@
 import {resetMap} from './map.js';
 
 const adForm = document.querySelector('.ad-form');
+const adAddress = adForm.address;
 const formTitle = adForm.querySelector('#title');
 const formPrice = adForm.querySelector('#price');
 const formRooms = adForm.querySelector('#room_number');
@@ -78,6 +79,10 @@ const onCheckInCheckOutTime = (evt) => {
   checkInTime.value = evt.target.value;
 };
 
+const setAddress = ({lat, lng}) => {
+  adAddress.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+};
+
 const onFormReset = (evt) => {
   evt.preventDefault();
   adForm.reset();
@@ -94,4 +99,4 @@ const setFormListeners = () => {
   formReset.addEventListener('click', onFormReset);
 };
 
-export {setFormListeners};
+export {setFormListeners, setAddress};
