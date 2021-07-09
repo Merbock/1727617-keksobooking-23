@@ -74,7 +74,7 @@ const createAdvert = (index) => {
 
   return {
     author: {
-      avatar: `img/avatars/user0${index}.png`,
+      avatar: `img/avatars/user${index < SIMILAR_ADVERTS_COUNT ? `0${index}` : `${index}`}.png`,
     },
     offer: {
       title: getRandomArrayElement(TITLES),
@@ -97,6 +97,6 @@ const createAdvert = (index) => {
 };
 
 // eslint-disable-next-line no-unused-vars
-const similarAdverts = new Array(SIMILAR_ADVERTS_COUNT).fill(null).map((_, index) => createAdvert(index));
+const similarAdverts = new Array(SIMILAR_ADVERTS_COUNT).fill(null).map((_, index) => createAdvert(index + 1));
 
 export {similarAdverts};

@@ -19,4 +19,6 @@ const enablePage = () => {
   toggleElements(mapFilter, false);
 };
 
-export {disablePage, enablePage};
+disablePage();
+
+export {enablePage};
