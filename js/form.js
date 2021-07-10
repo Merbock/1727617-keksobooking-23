@@ -1,4 +1,6 @@
+import { sendData } from './api.js';
 import {resetMap} from './map.js';
+import { showMessageSendError, showMessageSendSuccess } from './messages.js';
 
 const adForm = document.querySelector('.ad-form');
 const adAddress = adForm.address;
@@ -89,6 +91,41 @@ const onFormReset = (evt) => {
   resetMap();
 };
 
+// const onFormSubmit = (evt) => {
+//   evt.preventDefault();
+//   const formData = new FormData(adForm);
+
+//   fetch(
+//     'https://23.javascript.pages.academy/keksobooking',
+//     {
+//       method: 'POST',
+//       body: formData,
+//     },
+//   );
+// };
+
+// const setUserFormSubmit = (onSuccess) => {
+//   adForm.addEventListener('submit', (evt) => {
+//     evt.preventDefault();
+//     const formData = new FormData(evt.target);
+
+//     fetch(
+//       'https://23.javascript.pages.academy/keksobooking',
+//       {
+//         method: 'POST',
+//         body: formData,
+//       },
+//     );
+//   });
+// };
+
+adForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  const formData = new FormData(evt.target);
+
+  sendData(showMessageSendSuccess, showMessageSendError, formData);
+});
+
 const setFormListeners = () => {
   formTitle.addEventListener('change', onTitleChange);
   formPrice.addEventListener('change', onPriceChange);
@@ -97,6 +134,7 @@ const setFormListeners = () => {
   checkInTime.addEventListener('change', onCheckInCheckOutTime);
   checkOutTime.addEventListener('change', onCheckInCheckOutTime);
   formReset.addEventListener('click', onFormReset);
+  // adForm.addEventListener('submit', onFormSubmit);
 };
 
-export {setFormListeners, setAddress};
+export {setFormListeners, setAddress, onFormReset};

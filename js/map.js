@@ -1,10 +1,13 @@
 import {createCard} from './card.js';
 import {enablePage} from './page-state.js';
 import {setAddress} from './form.js';
+import { getData } from './api.js';
+import { showMessageGetError } from './messages.js';
 
 const addressInput = document.querySelector('#address');
 const FRACTION_DIGITS = 5;
 const MAP_ZOOM = 12;
+const SIMILAR_AD_COUNT = 10;
 
 const DefaultCoords = {
   LAT: 35.67500,
@@ -25,22 +28,7 @@ const Marker = {
   AD_ANCHOR_Y: 40,
 };
 
-const map = L.map('map-canvas')
-  .on('load', () => {
-    enablePage();
-    addressInput.value = `${DefaultCoords.LAT.toFixed(FRACTION_DIGITS)}, ${DefaultCoords.LNG.toFixed(FRACTION_DIGITS)}`;
-  })
-  .setView({
-    lat: DefaultCoords.LAT,
-    lng: DefaultCoords.LNG,
-  }, MAP_ZOOM);
-
-L.tileLayer(
-  Tile.URL,
-  {
-    attribtuion: Tile.ATTRUBUTION,
-  },
-).addTo(map);
+const map = L.map('map-canvas');
 
 const mainIcon = L.icon(
   {
@@ -66,18 +54,6 @@ mainMarker.addTo(map);
 mainMarker.on('move', (evt) => {
   setAddress(evt.target.getLatLng());
 });
-
-const resetMap = () => {
-  map.setView(
-    {
-      lat: DefaultCoords.LAT,
-      lng: DefaultCoords.LNG,
-    });
-  mainMarker.setLatLng({
-    lat: DefaultCoords.LAT,
-    lng: DefaultCoords.LNG,
-  });
-};
 
 const markerGroup = L.layerGroup().addTo(map);
 
@@ -105,12 +81,57 @@ const createAdMarker = (dataAd) => {
   );
 
   markerAd.addTo(markerGroup).bindPopup(createCard(dataAd));
+  // console.log(dataAd);
 };
 
 const renderMarkers = (similarAds) => {
   similarAds.forEach((dataAd) => {
     createAdMarker(dataAd);
+    // console.log(similarAds);
   });
 };
+
+map
+  .on('load', () => {
+    enablePage();
+    getData(
+      (ads) => {
+        renderMarkers(ads.slice(0, 10));
+      },
+      showMessageGetError,
+    );
+    addressInput.value = `${DefaultCoords.LAT.toFixed(FRACTION_DIGITS)}, ${DefaultCoords.LNG.toFixed(FRACTION_DIGITS)}`;
+  })
+  .setView({
+    lat: DefaultCoords.LAT,
+    lng: DefaultCoords.LNG,
+  }, MAP_ZOOM);
+
+L.tileLayer(
+  Tile.URL,
+  {
+    attribtuion: Tile.ATTRUBUTION,
+  },
+).addTo(map);
+
+const resetMap = () => {
+  map.setView(
+    {
+      lat: DefaultCoords.LAT,
+      lng: DefaultCoords.LNG,
+    });
+  mainMarker.setLatLng({
+    lat: DefaultCoords.LAT,
+    lng: DefaultCoords.LNG,
+  });
+};
+
+// getData(
+//   (ads) => {
+//     renderMarkers(ads.slice(0, 10));
+//     // renderMarkers(ads);
+//   },
+//   showMessageGetError,
+// );
 
 export {renderMarkers, resetMap};
