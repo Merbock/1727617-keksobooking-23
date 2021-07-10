@@ -81,13 +81,11 @@ const createAdMarker = (dataAd) => {
   );
 
   markerAd.addTo(markerGroup).bindPopup(createCard(dataAd));
-  // console.log(dataAd);
 };
 
 const renderMarkers = (similarAds) => {
   similarAds.forEach((dataAd) => {
     createAdMarker(dataAd);
-    // console.log(similarAds);
   });
 };
 
@@ -96,7 +94,7 @@ map
     enablePage();
     getData(
       (ads) => {
-        renderMarkers(ads.slice(0, 10));
+        renderMarkers(ads.slice(0, SIMILAR_AD_COUNT));
       },
       showMessageGetError,
     );
@@ -125,13 +123,5 @@ const resetMap = () => {
     lng: DefaultCoords.LNG,
   });
 };
-
-// getData(
-//   (ads) => {
-//     renderMarkers(ads.slice(0, 10));
-//     // renderMarkers(ads);
-//   },
-//   showMessageGetError,
-// );
 
 export {renderMarkers, resetMap};

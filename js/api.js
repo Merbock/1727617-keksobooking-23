@@ -1,5 +1,4 @@
 import {onFormReset} from './form.js';
-// import {resetMap} from './map.js';
 
 const GET_DATA_URL = 'https://23.javascript.pages.academy/keksobooking/data';
 const SEND_DATA_URL = 'https://23.javascript.pages.academy/keksobooking';

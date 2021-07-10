@@ -14,7 +14,6 @@ const onDeleteMessage = (evt) => {
   }
 };
 
-
 const showMessageSendSuccess = () => {
   const body = document.querySelector('body');
   const successMessage = document.querySelector('#success').content.querySelector('.success');
@@ -25,7 +24,6 @@ const showMessageSendSuccess = () => {
   document.addEventListener('keydown', onDeleteMessage);
   document.addEventListener('click', onDeleteMessage);
 };
-
 
 const showMessageSendError = (error) => {
   const body = document.querySelector('body');
@@ -43,7 +41,6 @@ const showMessageSendError = (error) => {
   document.addEventListener('click', onDeleteMessage);
   errorButton.addEventListener('click', onDeleteMessage);
 };
-
 
 const showMessageGetError = (message) => {
   const alertContainer = document.createElement('div');
