@@ -1,45 +1,50 @@
 import {isEscEvent} from './utils.js';
 
 const SHOW_TIME = 5000;
+const successMessage = document.querySelector('#success').content.querySelector('.success');
+const errorMessage = document.querySelector('#error').content.querySelector('.error');
 
-const onDeleteMessage = (evt) => {
+const onDeleteMessageClick = (evt) => {
   const message = document.querySelector('.displayMessage');
-  if (message) {
-    if (isEscEvent(evt) || evt.type === 'click') {
-      evt.preventDefault();
-      message.remove();
-      document.removeEventListener('keydown', onDeleteMessage);
-      document.removeEventListener('click', onDeleteMessage);
-    }
+
+  if (evt.type === 'click') {
+    evt.preventDefault();
+    message.remove();
+    document.removeEventListener('click', onDeleteMessageClick);
+  }
+};
+
+const onDeleteMessageKey = (evt) => {
+  const message = document.querySelector('.displayMessage');
+
+  if (isEscEvent(evt)) {
+    evt.preventDefault();
+    message.remove();
+    document.removeEventListener('keydown', onDeleteMessageKey);
   }
 };
 
 const showMessageSendSuccess = () => {
-  const body = document.querySelector('body');
-  const successMessage = document.querySelector('#success').content.querySelector('.success');
   const messageElement = successMessage.cloneNode(true);
   messageElement.classList.add('displayMessage');
-  body.append(messageElement);
+  document.body.append(messageElement);
 
-  document.addEventListener('keydown', onDeleteMessage);
-  document.addEventListener('click', onDeleteMessage);
+  messageElement.addEventListener('keydown', onDeleteMessageKey);
+  messageElement.addEventListener('click', onDeleteMessageClick);
 };
 
 const showMessageSendError = (error) => {
-  const body = document.querySelector('body');
-  const errorMessage = document.querySelector('#error').content.querySelector('.error');
   const messageElement = errorMessage.cloneNode(true);
-  const errorButton = messageElement.querySelector('.error__button');
   const errorMessageText = messageElement.querySelector('.error__message');
   messageElement.classList.add('displayMessage');
-  body.append(messageElement);
+  document.body.append(messageElement);
 
   if (error) {
-    errorMessageText.innerHTML += `<br>"${error}"`;
+    errorMessageText.textContent += ': Что-то пошло не так, попробуйте обновить страницу';
   }
-  document.addEventListener('keydown', onDeleteMessage);
-  document.addEventListener('click', onDeleteMessage);
-  errorButton.addEventListener('click', onDeleteMessage);
+
+  messageElement.addEventListener('keydown', onDeleteMessageKey);
+  messageElement.addEventListener('click', onDeleteMessageClick);
 };
 
 const showMessageGetError = (message) => {

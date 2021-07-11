@@ -7,7 +7,7 @@ import { showMessageGetError } from './messages.js';
 const addressInput = document.querySelector('#address');
 const FRACTION_DIGITS = 5;
 const MAP_ZOOM = 12;
-const SIMILAR_AD_COUNT = 10;
+// const SIMILAR_AD_COUNT = 10;
 
 const DefaultCoords = {
   LAT: 35.67500,
@@ -93,9 +93,10 @@ map
   .on('load', () => {
     enablePage();
     getData(
-      (ads) => {
-        renderMarkers(ads.slice(0, SIMILAR_AD_COUNT));
-      },
+      // (ads) => {
+      //   renderMarkers(ads.slice(0, SIMILAR_AD_COUNT));
+      // },
+      renderMarkers,
       showMessageGetError,
     );
     addressInput.value = `${DefaultCoords.LAT.toFixed(FRACTION_DIGITS)}, ${DefaultCoords.LNG.toFixed(FRACTION_DIGITS)}`;

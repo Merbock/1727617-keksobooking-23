@@ -1,10 +1,9 @@
 import {onFormReset} from './form.js';
 
-const GET_DATA_URL = 'https://23.javascript.pages.academy/keksobooking/data';
-const SEND_DATA_URL = 'https://23.javascript.pages.academy/keksobooking';
+const API_URL = 'https://23.javascript.pages.academy/keksobooking';
 
 const getData = (onSuccess, onFail) => {
-  fetch(GET_DATA_URL)
+  fetch(`${API_URL}/data`)
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -21,7 +20,7 @@ const getData = (onSuccess, onFail) => {
 
 const sendData = (onSuccess, onFail, body) => {
   fetch(
-    SEND_DATA_URL,
+    API_URL,
     {
       method: 'POST',
       body,
