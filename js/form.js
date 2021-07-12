@@ -1,4 +1,6 @@
+import { sendData } from './api.js';
 import {resetMap} from './map.js';
+import { showMessageSendError, showMessageSendSuccess } from './messages.js';
 
 const adForm = document.querySelector('.ad-form');
 const adAddress = adForm.address;
@@ -83,10 +85,19 @@ const setAddress = ({lat, lng}) => {
   adAddress.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 };
 
-const onFormReset = (evt) => {
-  evt.preventDefault();
+const onFormReset = () => {
   adForm.reset();
   resetMap();
+};
+
+formReset.addEventListener('click', (evt) => {
+  evt.preventDefault();
+});
+
+const onFormSubmit = (evt) => {
+  evt.preventDefault();
+  const formData = new FormData(adForm);
+  sendData(showMessageSendSuccess, showMessageSendError, formData);
 };
 
 const setFormListeners = () => {
@@ -97,6 +108,7 @@ const setFormListeners = () => {
   checkInTime.addEventListener('change', onCheckInCheckOutTime);
   checkOutTime.addEventListener('change', onCheckInCheckOutTime);
   formReset.addEventListener('click', onFormReset);
+  adForm.addEventListener('submit', onFormSubmit);
 };
 
-export {setFormListeners, setAddress};
+export {setFormListeners, setAddress, onFormReset};

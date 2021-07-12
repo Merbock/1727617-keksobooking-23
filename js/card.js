@@ -14,26 +14,28 @@ const getDeclension = (number, txt, cases = [2, 0, 1, 1, 1, 2]) => (
 
 const fillFeatures = (cardPopup, features) => {
   const featureList = cardPopup.querySelector('.popup__features');
-
   featureList.innerHTML = '';
 
-  features.forEach((feature) => {
-    const newFeature = document.createElement('li');
-    newFeature.classList.add('popup__feature', `popup__feature--${feature}`);
-    featureList.appendChild(newFeature);
-  });
+  if (features && features.length > 0) {
+    features.forEach((feature) => {
+      const newFeature = document.createElement('li');
+      newFeature.classList.add('popup__feature', `popup__feature--${feature}`);
+      featureList.appendChild(newFeature);
+    });
+  }
 };
 
 const fillPhoto = (cardPopup, photos) => {
   const photoList = cardPopup.querySelector('.popup__photos');
-
   photoList.innerHTML = '';
 
-  photos.forEach((src) => {
-    photoList.insertAdjacentHTML(
-      'beforeend',
-      `<img src=${src} class="popup__photo" width="45" height="40" alt="Фотография жилья">`);
-  });
+  if (photos && photos.length > 0) {
+    photos.forEach((src) => {
+      photoList.insertAdjacentHTML(
+        'beforeend',
+        `<img src=${src} class="popup__photo" width="45" height="40" alt="Фотография жилья">`);
+    });
+  }
 };
 
 const createCard = ({author, offer}) => {
