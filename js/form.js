@@ -1,6 +1,7 @@
-import { sendData } from './api.js';
+import {sendData} from './api.js';
 import {resetMap} from './map.js';
-import { showMessageSendError, showMessageSendSuccess } from './messages.js';
+import {showMessageSendError, showMessageSendSuccess} from './messages.js';
+import {filterForm} from './filter.js';
 
 const adForm = document.querySelector('.ad-form');
 const adAddress = adForm.address;
@@ -87,6 +88,7 @@ const setAddress = ({lat, lng}) => {
 
 const onFormReset = () => {
   adForm.reset();
+  filterForm.reset();
   resetMap();
 };
 

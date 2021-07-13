@@ -1,13 +1,16 @@
 import {createCard} from './card.js';
 import {enablePage} from './page-state.js';
 import {setAddress} from './form.js';
-import { getData } from './api.js';
-import { showMessageGetError } from './messages.js';
+import {getData} from './api.js';
+import {showMessageGetError} from './messages.js';
+import {getFilteredOffers, filterForm} from './filter.js';
+import {debounce} from './utils.js';
 
 const addressInput = document.querySelector('#address');
 const FRACTION_DIGITS = 5;
 const MAP_ZOOM = 12;
-// const SIMILAR_AD_COUNT = 10;
+const SIMILAR_AD_COUNT = 10;
+const localOffers = [];
 
 const DefaultCoords = {
   LAT: 35.67500,
@@ -83,8 +86,10 @@ const createAdMarker = (dataAd) => {
   markerAd.addTo(markerGroup).bindPopup(createCard(dataAd));
 };
 
-const renderMarkers = (similarAds) => {
-  similarAds.forEach((dataAd) => {
+const renderMarkers = (ads) => {
+  markerGroup.clearLayers();
+  const filteredAds = getFilteredOffers(ads).slice(0, SIMILAR_AD_COUNT);
+  filteredAds.forEach((dataAd) => {
     createAdMarker(dataAd);
   });
 };
@@ -93,10 +98,10 @@ map
   .on('load', () => {
     enablePage();
     getData(
-      // (ads) => {
-      //   renderMarkers(ads.slice(0, SIMILAR_AD_COUNT));
-      // },
-      renderMarkers,
+      (ads) => {
+        localOffers.push(...ads);
+        renderMarkers(ads);
+      },
       showMessageGetError,
     );
     addressInput.value = `${DefaultCoords.LAT.toFixed(FRACTION_DIGITS)}, ${DefaultCoords.LNG.toFixed(FRACTION_DIGITS)}`;
@@ -123,6 +128,14 @@ const resetMap = () => {
     lat: DefaultCoords.LAT,
     lng: DefaultCoords.LNG,
   });
+  getData((ads) => renderMarkers(ads));
 };
+
+filterForm.addEventListener(
+  'change',
+  debounce(() => {
+    renderMarkers(localOffers);
+  }),
+);
 
 export {renderMarkers, resetMap};
