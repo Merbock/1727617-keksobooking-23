@@ -3,8 +3,7 @@ import {enablePage} from './page-state.js';
 import {setAddress} from './form.js';
 import {getData} from './api.js';
 import {showMessageGetError} from './messages.js';
-import {getFilteredOffers, filterForm} from './filter.js';
-import {debounce} from './utils.js';
+import {filterOffers, setFilterListener} from './filter.js';
 
 const addressInput = document.querySelector('#address');
 const FRACTION_DIGITS = 5;
@@ -88,7 +87,7 @@ const createAdMarker = (dataAd) => {
 
 const renderMarkers = (ads) => {
   markerGroup.clearLayers();
-  const filteredAds = getFilteredOffers(ads).slice(0, SIMILAR_AD_COUNT);
+  const filteredAds = filterOffers(ads).slice(0, SIMILAR_AD_COUNT);
   filteredAds.forEach((dataAd) => {
     createAdMarker(dataAd);
   });
@@ -131,11 +130,6 @@ const resetMap = () => {
   getData((ads) => renderMarkers(ads));
 };
 
-filterForm.addEventListener(
-  'change',
-  debounce(() => {
-    renderMarkers(localOffers);
-  }),
-);
+setFilterListener(localOffers);
 
 export {renderMarkers, resetMap};
