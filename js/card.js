@@ -22,6 +22,8 @@ const fillFeatures = (cardPopup, features) => {
       newFeature.classList.add('popup__feature', `popup__feature--${feature}`);
       featureList.appendChild(newFeature);
     });
+  } else {
+    features.remove();
   }
 };
 
@@ -35,6 +37,8 @@ const fillPhoto = (cardPopup, photos) => {
         'beforeend',
         `<img src=${src} class="popup__photo" width="45" height="40" alt="Фотография жилья">`);
     });
+  } else {
+    photoList.remove();
   }
 };
 

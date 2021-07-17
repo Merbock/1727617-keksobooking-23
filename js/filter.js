@@ -30,18 +30,18 @@ const PriceValue = {
   },
 };
 
-const CheckType = ({offer}) => housingType.value === ANY_SELECT || offer.type === housingType.value;
+const checkType = ({offer}) => housingType.value === ANY_SELECT || offer.type === housingType.value;
 
-const CheckPrice = ({offer}) => {
+const checkPrice = ({offer}) => {
   const filteredPrice = PriceValue[housingPrice.value];
   return housingPrice.value === ANY_SELECT || (offer.price >= filteredPrice.MIN && offer.price <= filteredPrice.MAX);
 };
 
-const CheckRooms = ({offer}) => housingRooms.value === ANY_SELECT || offer.rooms === Number(housingRooms.value);
+const checkRooms = ({offer}) => housingRooms.value === ANY_SELECT || offer.rooms === Number(housingRooms.value);
 
-const CheckGuests = ({offer}) => housingGuests.value === ANY_SELECT || offer.guests === Number(housingGuests.value);
+const checkGuests = ({offer}) => housingGuests.value === ANY_SELECT || offer.guests === Number(housingGuests.value);
 
-const CheckFeatures = ({offer}) => {
+const checkFeatures = ({offer}) => {
   if (!offer.features) {
     return false;
   }
@@ -56,11 +56,11 @@ const filterOffers = (offers) => {
   for (let i = 0; i < offers.length && filteredOffers.length < SIMILAR_AD_COUNT; i++) {
     const offer = offers[i];
     if (
-      CheckType(offer) &&
-      CheckPrice(offer) &&
-      CheckRooms(offer) &&
-      CheckGuests(offer) &&
-      CheckFeatures(offer)
+      checkType(offer) &&
+      checkPrice(offer) &&
+      checkRooms(offer) &&
+      checkGuests(offer) &&
+      checkFeatures(offer)
     ) {
       filteredOffers.push(offer);
     }
