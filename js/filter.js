@@ -9,6 +9,7 @@ const housingGuests = filterForm.querySelector('#housing-guests');
 const housingFeatures = filterForm.querySelector('#housing-features');
 
 const ANY_SELECT = 'any';
+const FILTERED_ARR = 10;
 
 const PriceValue = {
   'any': {
@@ -29,19 +30,19 @@ const PriceValue = {
   },
 };
 
-const onCheckType = (ad) => housingType.value === ANY_SELECT || ad.offer.type === housingType.value;
+const CheckType = ({offer}) => housingType.value === ANY_SELECT || offer.type === housingType.value;
 
-const onCheckPrice = (ad) => {
+const CheckPrice = ({offer}) => {
   const filteredPrice = PriceValue[housingPrice.value];
-  return housingPrice.value === ANY_SELECT || (ad.offer.price >= filteredPrice.MIN && ad.offer.price <= filteredPrice.MAX);
+  return housingPrice.value === ANY_SELECT || (offer.price >= filteredPrice.MIN && offer.price <= filteredPrice.MAX);
 };
 
-const onCheckRooms = (ad) => housingRooms.value === ANY_SELECT || ad.offer.rooms === Number(housingRooms.value);
+const CheckRooms = ({offer}) => housingRooms.value === ANY_SELECT || offer.rooms === Number(housingRooms.value);
 
-const onCheckGuests = (ad) => housingGuests.value === ANY_SELECT || ad.offer.guests === Number(housingGuests.value);
+const CheckGuests = ({offer}) => housingGuests.value === ANY_SELECT || offer.guests === Number(housingGuests.value);
 
-const onCheckFeatures = (ad) => {
-  const hasFeatures = Boolean(ad.offer.features);
+const CheckFeatures = ({offer}) => {
+  const hasFeatures = Boolean(offer.features);
 
   if (!hasFeatures) {
     return false;
@@ -49,15 +50,19 @@ const onCheckFeatures = (ad) => {
 
   const checkedFeatures = housingFeatures.querySelectorAll('input:checked');
 
-  return Array.from(checkedFeatures).every((checkbox) => ad.offer.features.includes(checkbox.value));
+  return Array.from(checkedFeatures).every((checkbox) => offer.features.includes(checkbox.value));
 };
 
 const filterOffers = (offers) => {
   const filteredOffers = [];
-  for (let i = 0; i < offers.length; i++) {
+  for (let i = 0; i < offers.length && filteredOffers.length < FILTERED_ARR; i++) {
     const offer = offers[i];
     if (
-      onCheckType(offer) && onCheckPrice(offer) && onCheckRooms(offer) && onCheckGuests(offer) && onCheckFeatures(offer)
+      CheckType(offer) &&
+      CheckPrice(offer) &&
+      CheckRooms(offer) &&
+      CheckGuests(offer) &&
+      CheckFeatures(offer)
     ) {
       filteredOffers.push(offer);
     }
