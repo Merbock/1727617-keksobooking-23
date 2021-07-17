@@ -46,6 +46,8 @@ const onTitleChange = () => {
 const onPriceChange = () => {
   if (formPrice.value > MAX_PRICE_VALUE) {
     formPrice.setCustomValidity(`Максимальная цена ${MAX_PRICE_VALUE} руб`);
+  } else if (formPrice.value < PROPERTY_PRICE[propertyTypes.value]) {
+    formPrice.setCustomValidity(`Минимальная цена ${PROPERTY_PRICE[propertyTypes.value]} руб`);
   } else {
     formPrice.setCustomValidity('');
   }
@@ -70,10 +72,13 @@ const onCapacityChange = () => {
   formCapacity.reportValidity();
 };
 
-const onPropertyChange = () => {
+const setPrice = () => {
   formPrice.placeholder = PROPERTY_PRICE[propertyTypes.value];
   formPrice.min = PROPERTY_PRICE[propertyTypes.value];
+};
 
+const onPropertyChange = () => {
+  setPrice();
   propertyTypes.reportValidity();
 };
 
@@ -88,6 +93,7 @@ const setAddress = ({lat, lng}) => {
 
 const onFormReset = () => {
   adForm.reset();
+  setPrice();
   resetFilters();
   resetMap();
 };
@@ -98,12 +104,18 @@ formReset.addEventListener('click', (evt) => {
 
 const onFormSubmit = (evt) => {
   evt.preventDefault();
-  const formData = new FormData(adForm);
-  sendData(showMessageSendSuccess, showMessageSendError, formData);
+  onCapacityChange();
+  onPropertyChange();
+
+  if (adForm.checkValidity()) {
+    const formData = new FormData(adForm);
+    sendData(showMessageSendSuccess, showMessageSendError, formData);
+  }
 };
 
 const setFormListeners = () => {
   formTitle.addEventListener('change', onTitleChange);
+  formPrice.addEventListener('input', onPriceChange);
   formPrice.addEventListener('change', onPriceChange);
   formCapacity.addEventListener('change', onCapacityChange);
   propertyTypes.addEventListener('change', onPropertyChange);
