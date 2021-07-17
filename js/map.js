@@ -8,6 +8,7 @@ import {filterOffers, setFilterListener} from './filter.js';
 const addressInput = document.querySelector('#address');
 const FRACTION_DIGITS = 5;
 const MAP_ZOOM = 12;
+const SIMILAR_AD_COUNT = 10;
 
 const DefaultCoords = {
   LAT: 35.67500,
@@ -85,7 +86,7 @@ const createAdMarker = (dataAd) => {
 
 const renderMarkers = (ads) => {
   markerGroup.clearLayers();
-  const filteredAds = filterOffers(ads);
+  const filteredAds = (filterOffers(ads)).slice(0, SIMILAR_AD_COUNT);
   filteredAds.forEach((dataAd) => {
     createAdMarker(dataAd);
   });

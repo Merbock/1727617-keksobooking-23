@@ -9,7 +9,6 @@ const housingGuests = filterForm.querySelector('#housing-guests');
 const housingFeatures = filterForm.querySelector('#housing-features');
 
 const ANY_SELECT = 'any';
-const SIMILAR_AD_COUNT = 10;
 
 const PriceValue = {
   'any': {
@@ -51,23 +50,12 @@ const checkFeatures = ({offer}) => {
   return Array.from(checkedFeatures).every((checkbox) => offer.features.includes(checkbox.value));
 };
 
-const filterOffers = (offers) => {
-  const filteredOffers = [];
-  for (let i = 0; i < offers.length && filteredOffers.length < SIMILAR_AD_COUNT; i++) {
-    const offer = offers[i];
-    if (
-      checkType(offer) &&
-      checkPrice(offer) &&
-      checkRooms(offer) &&
-      checkGuests(offer) &&
-      checkFeatures(offer)
-    ) {
-      filteredOffers.push(offer);
-    }
-  }
-
-  return filteredOffers;
-};
+const filterOffers = (offers) => offers.filter((offer) =>
+  checkType(offer) &&
+  checkPrice(offer) &&
+  checkRooms(offer) &&
+  checkGuests(offer) &&
+  checkFeatures(offer));
 
 const setFilterListener = (data) => {
   filterForm.addEventListener(
