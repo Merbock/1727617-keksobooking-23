@@ -1,4 +1,4 @@
-import {debounce} from './utils.js';
+import {debounce} from './util.js';
 import {renderMarkers} from './map.js';
 
 const filterForm = document.querySelector('.map__filters');

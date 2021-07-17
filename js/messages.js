@@ -1,4 +1,4 @@
-import {isEscEvent} from './utils.js';
+import {isEscEvent} from './util.js';
 
 const SHOW_TIME = 5000;
 const successMessage = document.querySelector('#success').content.querySelector('.success');
