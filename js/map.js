@@ -8,8 +8,6 @@ import {filterOffers, setFilterListener} from './filter.js';
 const addressInput = document.querySelector('#address');
 const FRACTION_DIGITS = 5;
 const MAP_ZOOM = 12;
-const SIMILAR_AD_COUNT = 10;
-const localOffers = [];
 
 const DefaultCoords = {
   LAT: 35.67500,
@@ -87,7 +85,7 @@ const createAdMarker = (dataAd) => {
 
 const renderMarkers = (ads) => {
   markerGroup.clearLayers();
-  const filteredAds = filterOffers(ads).slice(0, SIMILAR_AD_COUNT);
+  const filteredAds = filterOffers(ads);
   filteredAds.forEach((dataAd) => {
     createAdMarker(dataAd);
   });
@@ -98,8 +96,8 @@ map
     enablePage();
     getData(
       (ads) => {
-        localOffers.push(...ads);
         renderMarkers(ads);
+        setFilterListener(ads);
       },
       showMessageGetError,
     );
@@ -129,7 +127,5 @@ const resetMap = () => {
   });
   getData((ads) => renderMarkers(ads));
 };
-
-setFilterListener(localOffers);
 
 export {renderMarkers, resetMap};
